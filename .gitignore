@@ -1,3 +1,12 @@
-node_modules
+/.idea
+/node_modules
 .env
+/logs
+/dist
+
+
+npm-debug.log
+
+/src/uploads
+/package-lock.json
 uploads
