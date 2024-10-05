@@ -28,9 +28,9 @@ app.use(jsonHandler);
 // app.use(tokenAuthentication);
 
 // Set handlebar
-app.engine('hbs', hbs({ extname: 'hbs', layoutsDir: __dirname + '/views' }));
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
+// app.engine('hbs', hbs({ extname: 'hbs', layoutsDir: __dirname + '/views' }));
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'hbs');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -41,7 +41,7 @@ app.use('/api', routes);
 // Landing page
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
-});
+  });
 
 // Joi Error Handler Middleware
 app.use(joiErrorHandler);
