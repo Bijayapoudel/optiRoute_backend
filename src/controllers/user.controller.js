@@ -39,9 +39,9 @@ class UserController {
       .catch((err) => next(err));
   }
 
-  async destroy(id) {
+  async destroy(req,res,next) {
     UserService
-      .destroy(req.params.id)
+      .delete(req.params.id)
       .then((data) => successResponse(res, data, HttpStatus.OK, 'User Deleted Successfully'))
       .catch((err) => next(err));
   }

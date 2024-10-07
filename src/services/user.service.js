@@ -5,7 +5,6 @@ import bcrypt from 'bcrypt';
 import logger from '../config/winston';
 import { error } from 'winston';
 
-
 class UserService {
   async getAll(page, pageSize) {
     const offset = (page - 1) * pageSize;
@@ -53,7 +52,7 @@ class UserService {
         phone_number,
         email,
         address,
-        password: hashedPassword
+        password: hashedPassword,
       })
         .save()
         .then((user) => UserDTO.fromUserEntity(user.attributes))
@@ -61,50 +60,74 @@ class UserService {
           logger.error('Error Creating Users', error);
           throw Boom.internal('Internal Server Error');
         });
-       } catch (error) {
+    } catch (error) {
       throw Boom.badImplementation('Error Creating the user', error);
     }
   }
 
   async update(id, userData) {
-    try {
-      const user = await User.query().where({ id, is_deleted: false }).first();
-      if (!user) throw Boom.notFound('User Not Found!');
+    const { admin_id, name, email, phone_number, address, password } = userData;
 
-      const updatedData={
+    try {
+      // Fetch the user
+      const existingUser = await User.where({ id, is_deleted: false }).fetch({ require: false });
+
+      if (!existingUser) {
+        throw Boom.notFound('User not found.');
+      }
+
+      // Prepare data for update
+      const updateData = {
         admin_id,
         name,
-        phone_number,
         email,
-        address
+        phone_number,
+        address,
+      };
+
+      // If a password is provided, hash it before saving
+      if (password) {
+        updateData.password = await bcrypt.hash(password, 10);
       }
-      if (userData.password) {
-        userData.password = await bcrypt.hash(userData.password, 10);
-      }
-      return user.save(updatedData,{patch:true})
-      .then((updatedUser)=> UserDTO.fromUserEntity(updatedUser.attributes))
-      .catch((error)=>{
-        logger.error('Error Updating User', error);
-        throw Boom.internal('Internal Server Error');
-      })
+
+      // Update the user
+      const updatedUser = await existingUser.save(updateData, { method: 'update', patch: true });
+
+      // Return the updated user data using DTO
+      return UserDTO.fromUserEntity(updatedUser.attributes);
     } catch (error) {
-      throw Boom.badImplementation('Error updating user', error);
+      if (error.isBoom) {
+        throw error; // Pass through Boom errors
+      }
+      logger.error('Error updating user:', error);
+      throw Boom.internal('Internal server error');
     }
   }
 
   async delete(id) {
     try {
-      const user = await User.query().where({ id, is_deleted: false }).first();
+      // Fetch the user
+      const user = await User.where({ id, is_deleted: false }).fetch({ require: false });
 
-      if (!user) throw Boom.notFound('User Not Found');
+      if (!user) {
+          throw Boom.notFound('User not found.');
+      }
 
-      await User.query().patch({ is_deleted: true }).where({ id });
+      // Mark the user as deleted
+      await user.save({ is_deleted: true }, { method: 'update', patch: true });
 
-      return { message: 'User Deleted Successfully' };
-    } catch (error) {
-      throw Boom.badImplementation('Error Deleting user', error);
+      // Return a success response
+      return {
+          success: true
+      };
+  } catch (error) {
+      if (error.isBoom) {
+          throw error; // Pass through Boom errors
+      }
+      logger.error('Error deleting user:', error);
+      throw Boom.internal('Internal server error');
     }
   }
 }
-
+  
 export default new UserService();
