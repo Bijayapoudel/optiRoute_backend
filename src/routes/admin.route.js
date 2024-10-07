@@ -1,4 +1,4 @@
-import express from 'express';
+ import express from 'express';
 import AdminController from '../controllers/admin.controller';
 import validate from '@config/joi.validate';
 import adminSchema from '../validators/admin.validator';
