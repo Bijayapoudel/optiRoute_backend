@@ -1,30 +1,3 @@
-// import express from 'express';
-// import RouteController from '../controllers/route.controller';
-// import validate from '@config/joi.validate';
-// import isAdmin from '../middlewares/isAdmin';
-// import routeSchema from '../validators/'
-// const router = express.Router();
-
-// // Define routes for the Route API
-
-// // Get all routes with pagination
-// router.get('/', RouteController.findAll);
-
-// // Get a specific route by ID
-// router.get('/:id', RouteController.findById);
-
-// // Create a new route
-// router.post('/', RouteController.store);
-
-// // Update an existing route by ID
-// router.put('/:id', RouteController.update);
-
-// // Delete a route by ID
-// router.delete('/:id', RouteController.destroy);
-
-// export default router;
-
-
 import express from 'express';
 import RouteController from '../controllers/route.controller';
 import validate from '@config/joi.validate';
