@@ -79,7 +79,7 @@ class StopService {
 
       return StopDTO.fromStopEntity(updatedStop.attributes);
     } catch (error) {
-      throw Boom.badImplementation('Error Creating Stop', error);
+      throw Boom.badImplementation('Error Updating Stop', error);
     }
   }
 
