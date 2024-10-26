@@ -12,6 +12,8 @@ exports.up = function (knex) {
       table.string('address').notNullable();
       table.string('profile_image');
       table.string('password').notNullable();
+      table.string('latitude').notNullable();
+      table.string('longitude').notNullable();
       table.enum('role', ['0', '1']).notNullable().defaultTo('1'); //0 is superAdmin and 1 is admin 
       table.enum('status', ['0', '1']).notNullable().defaultTo('0');
       table.timestamp('created_at').defaultTo(knex.fn.now());
