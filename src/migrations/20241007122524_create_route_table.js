@@ -5,8 +5,8 @@
 exports.up = function (knex) {
   return knex.schema.createTable('routes', function (table) {
     table.increments('id').primary(); // Primary key for the Route
-    table.bigInteger('admin_id').unsigned().references('id').inTable('admins').onDelete('CASCADE'); 
-    table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE'); 
+    table.bigInteger('admin_id').unsigned().references('id').inTable('admins').onDelete('CASCADE');
+    table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE');
     table.string('name').notNullable(); // Route name
     table.string('note'); // Additional notes about the route
     table.enu('optimize_mode', ['shortest', 'fastest']).notNullable(); // Optimization mode

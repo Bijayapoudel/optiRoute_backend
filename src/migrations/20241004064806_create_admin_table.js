@@ -7,6 +7,8 @@ exports.up = function (knex) {
       table.bigIncrements('id').primary();
       table.string('name').notNullable();
       table.string('phone_number').notNullable();
+      table.string('company').notNullable();
+      table.string('address').notNullable();
       table.string('email').notNullable().unique();
       table.string('profile_image');
       table.string('password').notNullable();
