@@ -31,6 +31,11 @@ const routeSchema = {
   }),
 
   update: Joi.object({
+    admin_id: Joi.number().integer().required().messages({
+      'number.base': 'Admin ID must be a number',
+      'number.integer': 'Admin ID must be an integer',
+      'any.required': 'Admin ID is required',
+    }),
     name: Joi.string().min(3).max(100).optional().messages({
       'string.base': 'Name must be a string',
       'string.min': 'Name must be at least 3 characters long',
