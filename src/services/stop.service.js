@@ -1,5 +1,5 @@
 import Boom from '@hapi/boom';
-import Stop from '../models/stop.route';
+import Stop from '../models/stop.model';
 import { StopDTO } from '../dtos/stopDTO';
 import logger from '../config/winston';
 
