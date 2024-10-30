@@ -5,6 +5,42 @@ import { RouteDTO } from '../dtos/routeDTO'; // Adjust the import path as necess
 import logger from '../config/winston';
 
 class RouteService {
+  // async getAll(page, pageSize) {
+  //   const offset = (page - 1) * pageSize;
+
+  //   const queryBuilder = (qb) => {
+  //     qb.orderBy('id', 'DESC');
+  //     qb.where('is_deleted', '=', 0); // Fetch only non-deleted routes
+  //     qb.limit(pageSize);
+  //     qb.offset(offset);
+  //   };
+
+  //   try {
+  //     const routeData = await Route.query(queryBuilder).fetchAll();
+
+  //     if (!routeData) return []; // If no routes are found, return an empty array
+
+  //     // Convert to RouteDTO instances
+  //     const routeCollection = routeData.toJSON();
+  //     const routeDTOs = routeCollection.map((route) => RouteDTO.fromRouteEntity(route));
+
+  //     return routeDTOs; // Return the array of RouteDTOs
+  //   } catch (error) {
+  //     throw Boom.badImplementation('Error fetching routes', error); // Use Boom for error handling
+  //   }
+  // }
+
+  // async getOne(id) {
+  //   try {
+  //     const route = await Route.query().where({ id, is_deleted: 0 }).first();
+  //     if (!route) throw Boom.notFound('Route Not Found!');
+
+  //     return RouteDTO.fromRouteEntity(route);
+  //   } catch (error) {
+  //     throw Boom.badImplementation('Error Fetching Route', error);
+  //   }
+  // }
+
   async getAll(page, pageSize) {
     const offset = (page - 1) * pageSize;
 
@@ -16,15 +52,27 @@ class RouteService {
     };
 
     try {
-      const routeData = await Route.query(queryBuilder).fetchAll();
+      const routeData = await Route.query(queryBuilder).fetchAll({ withRelated: ['stops'] });
 
       if (!routeData) return []; // If no routes are found, return an empty array
 
-      // Convert to RouteDTO instances
-      const routeCollection = routeData.toJSON();
-      const routeDTOs = routeCollection.map((route) => RouteDTO.fromRouteEntity(route));
+      // Convert to JSON and format the response to include stops
+      const formattedRoutes = routeData.toJSON().map((route) => ({
+        id: route.id,
+        admin_id: route.admin_id,
+        name: route.name,
+        note: route.note,
+        created_at: route.created_at,
+        updated_at: route.updated_at,
+        stops: route.stops.map((stop) => ({
+          address: stop.address,
+          latitude: stop.latitude,
+          longitude: stop.longitude,
+          name: stop.name,
+        })),
+      }));
 
-      return routeDTOs; // Return the array of RouteDTOs
+      return formattedRoutes; // Return the formatted routes
     } catch (error) {
       throw Boom.badImplementation('Error fetching routes', error); // Use Boom for error handling
     }
@@ -32,10 +80,31 @@ class RouteService {
 
   async getOne(id) {
     try {
-      const route = await Route.query().where({ id, is_deleted: 0 }).first();
-      if (!route) throw Boom.notFound('Route Not Found!');
+      const route = await Route.where({ id, is_deleted: 0 }).fetch({ withRelated: ['stops'] });
 
-      return RouteDTO.fromRouteEntity(route);
+      if (!route) {
+        throw Boom.notFound('Route Not Found!');
+      }
+
+      const routeData = route.toJSON();
+
+      // Format the response to include stops
+      const responseData = {
+        id: route.id,
+        admin_id: routeData.admin_id,
+        name: routeData.name,
+        note: routeData.note,
+        created_at: routeData.created_at,
+        updated_at: routeData.updated_at,
+        stops: routeData.stops.map((stop) => ({
+          address: stop.address,
+          latitude: stop.latitude,
+          longitude: stop.longitude,
+          name: stop.name,
+        })),
+      };
+
+      return responseData; // Return the formatted route data
     } catch (error) {
       throw Boom.badImplementation('Error Fetching Route', error);
     }

@@ -1,5 +1,5 @@
 import bookshelf from '../config/bookshelf';
-
+import Stop from './stop.model';
 const TABLE_NAME = 'routes';
 
 /**
@@ -27,6 +27,10 @@ class Route extends bookshelf.Model {
   //  */
   get hidden() {
     return ['created_at'];
+  }
+
+  stops() {
+    return this.hasMany(Stop, 'route_id');
   }
 }
 

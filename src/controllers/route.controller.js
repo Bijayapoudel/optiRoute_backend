@@ -7,15 +7,13 @@ class RouteController {
     const page = req.query.page || 1;
     const pageSize = req.query.pageSize || 10;
 
-    RouteService
-      .getAll(page, pageSize)
+    RouteService.getAll(page, pageSize)
       .then((data) => successResponse(res, data, HttpStatus.OK, 'Routes Fetched Successfully'))
       .catch((err) => next(err));
   }
 
   async findById(req, res, next) {
-    RouteService
-      .getOne(req.params.id)
+    RouteService.getOne(req.params.id)
       .then((data) => successResponse(res, data, HttpStatus.OK, 'Route Retrieved Successfully'))
       .catch((err) => next(err));
   }
@@ -34,15 +32,13 @@ class RouteController {
   }
 
   async update(req, res, next) {
-    RouteService
-      .update(req.params.id, req.body)
+    RouteService.update(req.params.id, req.body)
       .then((data) => successResponse(res, data, HttpStatus.OK, 'Route Updated Successfully'))
       .catch((err) => next(err));
   }
 
   async destroy(req, res, next) {
-    RouteService
-      .delete(req.params.id)
+    RouteService.delete(req.params.id)
       .then((data) => successResponse(res, data, HttpStatus.OK, 'Route Deleted Successfully'))
       .catch((err) => next(err));
   }
