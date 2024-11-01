@@ -2,6 +2,7 @@ import Boom from '@hapi/boom';
 import User from '../models/user.model';
 import { UserDTO } from '../dtos/userDTO';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import logger from '../config/winston';
 import { error } from 'winston';
 
@@ -110,7 +111,7 @@ class UserService {
       const user = await User.where({ id, is_deleted: false }).fetch({ require: false });
 
       if (!user) {
-          throw Boom.notFound('User not found.');
+        throw Boom.notFound('User not found.');
       }
 
       // Mark the user as deleted
@@ -118,16 +119,51 @@ class UserService {
 
       // Return a success response
       return {
-          success: true
+        success: true,
       };
-  } catch (error) {
+    } catch (error) {
       if (error.isBoom) {
-          throw error; // Pass through Boom errors
+        throw error; // Pass through Boom errors
       }
       logger.error('Error deleting user:', error);
       throw Boom.internal('Internal server error');
     }
   }
+
+  async login(userData) {
+    try {
+      const { email, password } = userData;
+      if (!email || !password) {
+        throw Boom.badRequest('Email and Password are required!');
+      }
+      const user = await User.query().where({ email, is_deleted: 0 }).first();
+      if (!user) {
+        throw Boom.unauthorized('This user does not exists');
+      }
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        throw Boom.unauthorized('Password does not match!');
+      }
+
+      const token = jwt.sign(
+        {
+          id: user.id,
+          email: user.email,
+        },
+        process.env.TOKEN_SECRET_KEY,
+        { expiresIn: '3d' }
+      );
+      // const userDTO = UserDTO.fromUserEntity(user.email);
+      return {
+        // message: 'Login Successful',
+        token,
+        user: UserDTO.fromUserEntity(user),
+      };
+    } catch (error) {
+      console.log('Error in login user:', error.message);
+      throw Boom.badImplementation('Error in login user');
+    }
+  }
 }
-  
+
 export default new UserService();

@@ -260,4 +260,6 @@ router.route('/:id').put(isAdmin, validate(userSchema.update), UserController.up
  */
 router.route('/:id').delete(isAdmin, UserController.destroy);
 
+router.route('/login').post(isAdmin, UserController.login);
+
 export default router;
