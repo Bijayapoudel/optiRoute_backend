@@ -7,6 +7,7 @@ const routeSchema = {
       'number.integer': 'Admin ID must be an integer',
       'any.required': 'Admin ID is required',
     }),
+    user_id: Joi.number().integer(),
     name: Joi.string().min(3).max(100).required().messages({
       'string.base': 'Name must be a string',
       'string.min': 'Name must be at least 3 characters long',
@@ -36,6 +37,7 @@ const routeSchema = {
       'number.integer': 'Admin ID must be an integer',
       'any.required': 'Admin ID is required',
     }),
+    user_id: Joi.number().integer(),
     name: Joi.string().min(3).max(100).optional().messages({
       'string.base': 'Name must be a string',
       'string.min': 'Name must be at least 3 characters long',

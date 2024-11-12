@@ -17,6 +17,18 @@ class UserController {
       .catch((err) => next(err));
   }
 
+  async getAllUsersOfAdmin(req, res, next) {
+    const page = req.query.page || 1;
+    const pageSize = req.query.pageSize || 10;
+
+    const admin_id = req.params.admin_id;
+    UserService.getAllUsersOfAdmin(admin_id, page, pageSize)
+      .then((data) =>
+        successResponse(res, data, HttpStatus.OK, 'Users of an admin fetched successfully!')
+      )
+      .catch((err) => next(err));
+  }
+
   async store(req, res, next) {
     try {
       // Call the store method from the UserService

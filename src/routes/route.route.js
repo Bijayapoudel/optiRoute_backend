@@ -147,8 +147,6 @@ router.route('/').post(isAdmin, validate(routeSchema.store), RouteController.sto
  */
 router.route('/:id').get(isAdmin, RouteController.findById);
 
-
-
 /**
  * @swagger
  * /v1/routes:
@@ -181,9 +179,6 @@ router.route('/:id').get(isAdmin, RouteController.findById);
  */
 
 router.route('/').get(isAdmin, RouteController.findAll);
-
-
-
 
 /**
  * @swagger
@@ -274,5 +269,9 @@ router.route('/:id').put(isAdmin, validate(routeSchema.update), RouteController.
  *           $ref: '#/definitions/Error'
  */
 router.route('/:id').delete(isAdmin, RouteController.destroy);
+
+router.route('/user/:user_id').get(RouteController.getAllByUserId);
+
+router.route('/admin/:admin_id').get(RouteController.getAllByAdminId);
 
 export default router;

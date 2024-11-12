@@ -262,4 +262,6 @@ router.route('/:id').delete(isAdmin, UserController.destroy);
 
 router.route('/login').post(isAdmin, UserController.login);
 
+router.route('/users/:admin_id').get(UserController.getAllUsersOfAdmin);
+
 export default router;

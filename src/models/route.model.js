@@ -32,6 +32,10 @@ class Route extends bookshelf.Model {
   stops() {
     return this.hasMany(Stop, 'route_id');
   }
+
+  users() {
+    return this.belongsTo(User, 'user_id');
+  }
 }
 
 export default Route;

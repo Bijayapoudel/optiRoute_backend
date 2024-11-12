@@ -42,6 +42,30 @@ class RouteController {
       .then((data) => successResponse(res, data, HttpStatus.OK, 'Route Deleted Successfully'))
       .catch((err) => next(err));
   }
+
+  async getAllByUserId(req, res, next) {
+    const page = req.query.page || 1;
+    const pageSize = req.query.pageSize || 10;
+
+    const user_id = req.params.user_id;
+    RouteService.getAllByUserId(user_id, page, pageSize)
+      .then((data) =>
+        successResponse(res, data, HttpStatus.OK, 'Routes for User Retrieved Successfully!')
+      )
+      .catch((err) => next(err));
+  }
+
+  async getAllByAdminId(req, res, next) {
+    const page = req.query.page || 1;
+    const pageSize = req.query.pageSize || 10;
+
+    const admin_id = req.params.admin_id;
+    RouteService.getAllByAdminId(admin_id, page, pageSize)
+      .then((data) =>
+        successResponse(res, data, HttpStatus.OK, 'Routes for Admin Retrieved Successfully!')
+      )
+      .catch((err) => next(err));
+  }
 }
 
 export default new RouteController();

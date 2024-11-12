@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import logger from '../config/winston';
 import { error } from 'winston';
+import Route from '../models/route.model';
 
 class UserService {
   async getAll(page, pageSize) {
@@ -29,6 +30,36 @@ class UserService {
       return userDTOs; // Return the array of UserDTOs
     } catch (error) {
       throw Boom.badImplementation('Error fetching users', error); // Use Boom for error handling
+    }
+  }
+
+  async getAllUsersOfAdmin(admin_id, page, pageSize) {
+    const offset = (page - 1) * pageSize;
+
+    const queryBuilder = (qb) => {
+      qb.orderBy('id', 'DESC');
+      qb.where('is_deleted', '=', 0);
+      qb.where('admin_id', '=', admin_id);
+      qb.limit(pageSize);
+      qb.offset(offset);
+    };
+    try {
+      const userData = await User.query(queryBuilder).fetchAll();
+
+      if (!userData) return [];
+      const formattedUsers = userData.toJSON().map((user) => ({
+        id: user.id,
+        admin_id: user.admin_id,
+        name: user.name,
+        phone_number: user.phone_number,
+        email: user.email,
+        address: user.address,
+        password: user.password,
+      }));
+
+      return formattedUsers;
+    } catch (error) {
+      throw Boom.badImplementation('Error Fetching users of an admin');
     }
   }
 

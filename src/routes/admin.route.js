@@ -1,13 +1,11 @@
- import express from 'express';
+import express from 'express';
 import AdminController from '../controllers/admin.controller';
 import validate from '@config/joi.validate';
 import adminSchema from '../validators/admin.validator';
 import isAdmin from '../middlewares/isAdmin';
 import isSuperAdmin from '../middlewares/isSuperAdmin';
 
-const router= express.Router();
-
-
+const router = express.Router();
 
 /**
  * @swagger
@@ -136,8 +134,6 @@ const router= express.Router();
 
 router.route('/login').post(validate(adminSchema.adminLogin), AdminController.adminLogin);
 
-
-
 /**
  * @swagger
  * /v1/admin/change-password:
@@ -197,7 +193,6 @@ router.route('/login').post(validate(adminSchema.adminLogin), AdminController.ad
  */
 router.route('/change-password').patch(isAdmin, AdminController.changePassword);
 
-
 /**
  * @swagger
  * /v1/admin:
@@ -229,7 +224,6 @@ router.route('/change-password').patch(isAdmin, AdminController.changePassword);
  *           $ref: '#/definitions/Error'
  */
 router.route('/').get(isAdmin, isSuperAdmin, AdminController.listAdmins);
-
 
 /**
  * @swagger
@@ -352,9 +346,9 @@ router.route('/:id').get(isAdmin, isSuperAdmin, AdminController.getAdmin);
  *         schema:
  *           $ref: '#/definitions/Error'
  */
-router.route('/').post(isAdmin, isSuperAdmin, validate(adminSchema.createAdmin),AdminController.createAdmin);
-
-
+router
+  .route('/')
+  .post(isAdmin, isSuperAdmin, validate(adminSchema.createAdmin), AdminController.createAdmin);
 
 /**
  * @swagger
@@ -441,7 +435,9 @@ router.route('/').post(isAdmin, isSuperAdmin, validate(adminSchema.createAdmin),
  *           $ref: '#/definitions/Error'
  */
 
-router.route('/:id').put(isAdmin, isSuperAdmin, validate(adminSchema.updateAdmin), AdminController.updateAdmin);
+router
+  .route('/:id')
+  .put(isAdmin, isSuperAdmin, validate(adminSchema.updateAdmin), AdminController.updateAdmin);
 
 /**
  * @swagger
@@ -482,6 +478,4 @@ router.route('/:id').put(isAdmin, isSuperAdmin, validate(adminSchema.updateAdmin
  */
 router.route('/:id').delete(isAdmin, isSuperAdmin, AdminController.deleteAdmin);
 
-
 export default router;
-
