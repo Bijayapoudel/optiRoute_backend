@@ -5,7 +5,7 @@
   "homepage": ".",
   "scripts": {
     "start:dev": "nodemon --exec babel-node -- src/index.js",
-    "start": "babel-node -- src/index.js",
+    "start": "npx knex migrate:latest && npx knex seed:run && babel-node -- src/index.js",
     "clean": "rimraf node_modules && rimraf dist && npm install",
     "migrate": "knex migrate:latest",
     "migrate:make": "knex migrate:make",
