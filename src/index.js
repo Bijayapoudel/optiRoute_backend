@@ -1,5 +1,7 @@
 import 'module-alias/register';
 import path from 'path';
+const { Pool } = require('pg');
+
 import hbs from 'express-handlebars';
 import bodyParser from 'body-parser';
 import app from '@config/express';
@@ -41,7 +43,7 @@ app.use('/api', routes);
 // Landing page
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
-  });
+});
 
 // Joi Error Handler Middleware
 app.use(joiErrorHandler);
@@ -99,5 +101,10 @@ const HOST = app.get('host');
 server.listen(PORT, HOST, () => {
   console.log(`Server running at http://${HOST}:${PORT}`);
 });
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
+module.exports = pool;
 
 export default app;
