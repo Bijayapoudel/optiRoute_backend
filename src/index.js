@@ -1,7 +1,7 @@
 import 'module-alias/register';
 import path from 'path';
-const { Pool } = require('pg');
-import { createClient } from '@supabase/supabase-js';
+// const { Pool } = require('pg');
+// import { createClient } from '@supabase/supabase-js';
 import hbs from 'express-handlebars';
 import bodyParser from 'body-parser';
 import app from '@config/express';
@@ -102,8 +102,8 @@ server.listen(PORT, HOST, () => {
   console.log(`Server running at http://${HOST}:${PORT}`);
 });
 
-const supabaseUrl = 'https://ovagnihkmpsmdzuhwldc.supabase.co';
-const supabaseKey = process.env.SUPABASE_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
+// const supabaseUrl = 'https://ovagnihkmpsmdzuhwldc.supabase.co';
+// const supabaseKey = process.env.SUPABASE_KEY;
+// const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default app;
